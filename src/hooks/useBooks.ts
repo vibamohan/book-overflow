@@ -1,11 +1,17 @@
-import { useState, useEffect } from 'react'
-import { Book } from '../types/book'
+import { useEffect, useState } from "react";
+import { getBooks } from "../services/bookService";
+import { Book } from "../types/book";
 
-export default function useBooks() {
-  const [books, setBooks] = useState<Book[]>([])
+export function useBooks() {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // placeholder: fetch books
-    setBooks([])
-  }, [])
-  return { books, setBooks }
+    getBooks().then(({ data }) => {
+      setBooks(data ?? []);
+      setLoading(false);
+    });
+  }, []);
+
+  return { books, loading };
 }

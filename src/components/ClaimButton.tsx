@@ -1,9 +1,13 @@
-import React from 'react'
+import { claimBook } from "../services/claimService";
 
-export default function ClaimButton({ bookId, claimed }: { bookId: string; claimed: boolean }) {
+export function ClaimButton({ bookId }: { bookId: string }) {
   return (
-    <button className={`px-3 py-1 rounded ${claimed ? 'bg-gray-300' : 'bg-blue-600 text-white'}`}>
-      {claimed ? 'Claimed' : 'Claim'}
+    <button
+      onClick={() => claimBook(bookId)}
+      className="mt-2 bg-blue-600 text-white px-3 py-1 rounded"
+    >
+      Claim
     </button>
-  )
+  );
 }
+

@@ -1,15 +1,35 @@
-import React from 'react'
+import { useState } from "react";
+import { addBook } from "../services/bookService";
+import { supabase } from "../services/supabase";
 
 export default function PostBook() {
+  const [title, setTitle] = useState("");
+  const [subject, setSubject] = useState("");
+  const [condition, setCondition] = useState("");
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) return;
+
+    await addBook({
+      title,
+      subject,
+      condition,
+      owner_id: data.user.id,
+    });
+
+    setTitle("");
+    setSubject("");
+    setCondition("");
+  }
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Post a Book</h1>
-      <form className="space-y-4 max-w-md">
-        <input className="w-full p-2 border rounded" placeholder="Title" />
-        <input className="w-full p-2 border rounded" placeholder="Author" />
-        <textarea className="w-full p-2 border rounded" placeholder="Description" />
-        <button className="px-4 py-2 bg-blue-600 text-white rounded">Post</button>
-      </form>
-    </div>
-  )
+    <form onSubmit={submit} className="max-w-md mx-auto p-6 space-y-3">
+      <input className="border p-2 w-full" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
+      <input className="border p-2 w-full" placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)} />
+      <input className="border p-2 w-full" placeholder="Condition" value={condition} onChange={e => setCondition(e.target.value)} />
+      <button className="bg-green-600 text-white px-4 py-2 rounded">Post</button>
+    </form>
+  );
 }

@@ -1,16 +1,13 @@
-import React from 'react'
-import { Book } from '../types/book'
-import ClaimButton from './ClaimButton'
+import { Book } from "../types/book";
+import { ClaimButton } from "./ClaimButton";
 
-export default function BookCard({ book }: { book: Book }) {
+export function BookCard({ book }: { book: Book }) {
   return (
-    <div className="border rounded p-4 bg-white shadow-sm">
-      <h3 className="font-semibold">{book.title}</h3>
-      <p className="text-sm text-gray-600">{book.author}</p>
-      <p className="mt-2 text-sm">{book.description}</p>
-      <div className="mt-4">
-        <ClaimButton bookId={book.id} claimed={!!book.claimed} />
-      </div>
+    <div className="border rounded p-4">
+      <h2 className="font-semibold">{book.title}</h2>
+      <p>{book.subject}</p>
+      <p className="text-sm">{book.condition}</p>
+      <ClaimButton bookId={book.id} />
     </div>
-  )
+  );
 }

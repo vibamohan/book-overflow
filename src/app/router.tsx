@@ -1,18 +1,14 @@
-import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from '../pages/Home'
-import PostBook from '../pages/PostBook'
-import AppLayout from '../components/layout/AppLayout'
+import { createBrowserRouter } from "react-router-dom";
+import AppLayout from "../components/layout/AppLayout";
+import Home from "../pages/Home";
+import PostBook from "../pages/PostBook";
 
-export default function Router() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index element={<Home />} />
-          <Route path="post" element={<PostBook />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  )
-}
+export const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/post", element: <PostBook /> },
+    ],
+  },
+]);

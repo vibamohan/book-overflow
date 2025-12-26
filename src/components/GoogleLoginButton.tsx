@@ -1,9 +1,12 @@
-import React from 'react'
+import { signInWithGoogle } from "../services/authService";
 
-export default function GoogleLoginButton({ onClick }: { onClick?: () => void }) {
+export function GoogleLoginButton() {
   return (
-    <button onClick={onClick} className="px-4 py-2 bg-red-500 text-white rounded">
+    <button
+      onClick={signInWithGoogle}
+      className="border px-4 py-2 rounded"
+    >
       Sign in with Google
     </button>
-  )
+  );
 }

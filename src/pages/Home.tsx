@@ -1,15 +1,16 @@
-import React from 'react'
-import BookCard from '../components/BookCard'
-import useBooks from '../hooks/useBooks'
+import { useBooks } from "../hooks/useBooks";
+import { BookCard } from "../components/BookCard";
 
 export default function Home() {
-  const { books } = useBooks()
+  const { books, loading } = useBooks();
+
+  if (loading) return <div className="p-6">Loading...</div>;
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Available Books</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {books.length === 0 ? <p>No books yet.</p> : books.map(b => <BookCard key={b.id} book={b} />)}
-      </div>
+    <div className="max-w-4xl mx-auto p-6 space-y-4">
+      {books.map(b => (
+        <BookCard key={b.id} book={b} />
+      ))}
     </div>
-  )
+  );
 }

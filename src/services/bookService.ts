@@ -1,14 +1,13 @@
-import { supabase } from './supabase'
-import { Book } from '../types/book'
+import { supabase } from "./supabase";
 
-export async function fetchBooks(): Promise<Book[]> {
-  const { data, error } = await supabase.from<Book>('books').select('*')
-  if (error) throw error
-  return data || []
+export function getBooks() {
+  return supabase
+    .from("books")
+    .select("*")
+    .eq("status", "available")
+    .order("created_at", { ascending: false });
 }
 
-export async function createBook(payload: Partial<Book>) {
-  const { data, error } = await supabase.from('books').insert([payload])
-  if (error) throw error
-  return data
+export function addBook(book: any) {
+  return supabase.from("books").insert(book);
 }

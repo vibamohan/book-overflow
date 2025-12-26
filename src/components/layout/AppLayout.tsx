@@ -1,14 +1,18 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import Navbar from './Navbar'
+import { Outlet } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import { GoogleLoginButton } from "../GoogleLoginButton";
+import Navbar from "./Navbar";
 
 export default function AppLayout() {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <GoogleLoginButton />;
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <>
       <Navbar />
-      <main className="container mx-auto p-4 flex-1">
-        <Outlet />
-      </main>
-    </div>
-  )
+      <Outlet />
+    </>
+  );
 }
