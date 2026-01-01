@@ -1,3 +1,4 @@
+import { Book } from "../types/book";
 import { supabase } from "./supabase";
 
 export function getBooks() {
@@ -8,6 +9,6 @@ export function getBooks() {
     .order("created_at", { ascending: false });
 }
 
-export function addBook(book: any) {
+export function addBook(book: Book) {
   return supabase.from("books").insert(book);
 }
