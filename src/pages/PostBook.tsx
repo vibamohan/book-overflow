@@ -6,39 +6,58 @@ export default function PostBook() {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [condition, setCondition] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const { data } = await supabase.auth.getUser();
     if (!data.user) return;
 
+    let imageUrl = null;
+
+    // Upload image if selected
+    if (imageFile) {
+      const fileExt = imageFile.name.split(".").pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("book-images") // replace with your storage bucket name
+        .upload(fileName, imageFile);
+
+      if (uploadError) {
+        console.error("Error uploading image:", uploadError);
+      } else {
+        imageUrl = supabase.storage.from("book-images").getPublicUrl(fileName)
+          .data.publicUrl;
+      }
+    }
+
     await addBook({
       title,
       subject,
       condition,
       owner_id: data.user.id,
+      image_url: imageUrl,
     });
 
     setTitle("");
     setSubject("");
     setCondition("");
+    setImageFile(null);
   }
 
   return (
     <form onSubmit={submit} className="max-w-md mx-auto p-6 space-y-3">
-      {/* Title input */}
       <input
         className="border p-2 w-full"
         placeholder="Title"
         value={title}
-        onChange={e => setTitle(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
       />
 
-      {/* Subject dropdown */}
       <select
         className="border p-2 w-full"
         value={subject}
-        onChange={e => setSubject(e.target.value)}
+        onChange={(e) => setSubject(e.target.value)}
       >
         <option value="">Select Subject</option>
         <option value="Chemistry">Chemistry</option>
@@ -52,11 +71,10 @@ export default function PostBook() {
         <option value="Other">Other</option>
       </select>
 
-      {/* Condition dropdown */}
       <select
         className="border p-2 w-full"
         value={condition}
-        onChange={e => setCondition(e.target.value)}
+        onChange={(e) => setCondition(e.target.value)}
       >
         <option value="">Select Condition</option>
         <option value="New">New</option>
@@ -65,6 +83,15 @@ export default function PostBook() {
         <option value="Fair">Fair</option>
         <option value="Poor">Poor</option>
       </select>
+
+      {/* Image upload input */}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) =>
+          setImageFile(e.target.files ? e.target.files[0] : null)
+        }
+      />
 
       <button className="bg-green-600 text-white px-4 py-2 rounded">
         Post
